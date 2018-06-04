@@ -1,0 +1,201 @@
+56. Two Sum
+//这道题以后就用map做，把另一部门的值当成key放进去，下次检索到这个key就是另一个值。
+//O(n)的时间复杂度，不要再用双指针，双指针索引不好确定，3sum和4sum可以继续用
+public class Solution {
+    /**
+     * @param numbers: An array of Integer
+     * @param target: target = numbers[index1] + numbers[index2]
+     * @return: [index1, index2] (index1 < index2)
+     */
+    public int[] twoSum(int[] numbers, int target) {
+        // write your code here
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int[] res = new int[2];
+        if(numbers == null || numbers.length < 2){
+            return res;
+        }
+        for(int i = 0; i <numbers.length; i++){
+            if(map.get(numbers[i]) != null){
+                res[0] = map.get(numbers[i]);
+                res[1] = i;
+                return res;
+            } else{
+                map.put(target - numbers[i], i);
+            }
+        }
+        return res;
+    }
+}
+608. Two Sum II - Input array is sorted
+//已经排序好的可以用双指针，O(n)复杂度
+public class Solution {
+    /**
+     * @param nums: an array of Integer
+     * @param target: target = nums[index1] + nums[index2]
+     * @return: [index1 + 1, index2 + 1] (index1 < index2)
+     */
+    public int[] twoSum(int[] nums, int target) {
+        // write your code here
+        int[] res = new int[2];
+        if(nums == null || nums.length < 2){
+            return res;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while(left < right){
+            if(nums[left] + nums[right] == target){
+                res[0] = left + 1;
+                res[1] = right + 1;
+                return res;
+            } else if(nums[left] + nums[right] < target){
+                left++;
+            } else{
+                right--;
+            }
+        }
+        return res;
+    }
+}
+
+382. Triangle Count
+//双指针模板套路，要记住
+public class Solution {
+    /**
+     * @param S: A list of integers
+     * @return: An integer
+     */
+    public int triangleCount(int[] S) {
+        // write your code here
+        int res = 0;
+        if(S == null || S.length < 3){
+            return res;
+        }
+        Arrays.sort(S);
+        for(int i = 0; i < S.length; i++){
+            int left = 0;
+            int right = i - 1;
+            while(left < right){
+                if(S[left] + S[right] > S[i]){
+                    res += right - left;
+                    right--;
+                } else {
+                    left++;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+57. 3Sum
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> list=new ArrayList<>();
+        if(nums.length<3||nums==null)
+            return list;
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length-2;i++){
+            int low=i+1;
+            int high=nums.length-1;
+            while(low<high){
+                int sum=nums[i]+nums[low]+nums[high];
+                if(sum==0){
+                    List<Integer> unit=new ArrayList<>();
+                    unit.add(nums[i]);
+                    unit.add(nums[low]);
+                    unit.add(nums[high]);
+                    if(!list.contains(unit)){
+                        list.add(unit);
+                    }
+                    low++;
+                    high--;
+                }
+                else if(sum>0)
+                    high--;
+                else
+                    low++;
+            }
+        }
+        return list;
+    }
+}
+
+59. 3Sum Closest
+public class Solution {
+    /**
+     * @param numbers: Give an array numbers of n integer
+     * @param target: An integer
+     * @return: return the sum of the three integers, the sum closest target.
+     */
+    public int threeSumClosest(int[] numbers, int target) {
+        // write your code here
+        if(numbers == null || numbers.length < 3){
+            return 0;
+        }
+        int sum = 0;
+        int diff = Integer.MAX_VALUE;
+        Arrays.sort(numbers);
+        for(int i = 0; i< numbers.length - 2; i++){
+            int left = i + 1;
+            int right = numbers.length - 1;
+            while(left < right){
+                int temp = numbers[left] + numbers[right] + numbers[i];
+                if(Math.abs(target-temp)<diff){
+                    sum=temp;
+                    diff=Math.abs(target-temp);
+                }
+                if(temp == target){
+                    return target;
+                } else if(temp > target){
+                    right--;
+                } else{
+                    left++;
+                }
+            }
+        }
+        return sum;
+    }
+}
+
+58. 4Sum
+public class Solution {
+    /**
+     * @param numbers: Give an array
+     * @param target: An integer
+     * @return: Find all unique quadruplets in the array which gives the sum of zero
+     */
+    public List<List<Integer>> fourSum(int[] numbers, int target) {
+        // write your code here
+        List<List<Integer>> list = new ArrayList<>();
+        if(numbers == null || numbers.length < 4){
+            return list;
+        }
+        Arrays.sort(numbers);
+        for(int i = 0; i < numbers.length - 3; i++){
+            for(int j = i + 1; j < numbers.length - 2; j++){
+                int left = j + 1;
+                int right = numbers.length - 1;
+                while(left < right){
+                    int sum = numbers[i] + numbers[j] + numbers[left] + numbers[right];
+                    if(sum == target){
+                        List<Integer> temp = new ArrayList<>();
+                        temp.add(numbers[i]);
+                        temp.add(numbers[j]);
+                        temp.add(numbers[left]);
+                        temp.add(numbers[right]);
+                        if(!list.contains(temp)){
+                            list.add(temp);
+                        }
+                        left++;
+                        right--;
+                    } else if(sum > target){
+                        right--;
+                    } else{
+                        left++;
+                    }
+                }
+            }
+        }
+        return list;
+    }
+}
