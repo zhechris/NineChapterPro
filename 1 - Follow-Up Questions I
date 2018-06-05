@@ -260,3 +260,114 @@ public class Solution {
     }
 }
 
+见到集合要想到min/max问题，就要想到heap，进而想到priorityqueue
+不会的话就先排序
+401. Kth Smallest Number in Sorted Matrix
+public class Solution {
+    /**
+     * @param matrix: a matrix of integers
+     * @param k: An integer
+     * @return: the kth smallest number in the matrix
+     */
+    public int kthSmallest(int[][] matrix, int k) {
+        // write your code here
+        if(matrix.length == 0 || matrix[0].length == 0 || matrix == null){
+            return 0;
+        }
+        int [] dx = new int[]{0, 1};
+        int [] dy = new int[]{1, 0};
+        int n = matrix.length;//rows
+        int m = matrix[0].length;//column
+        PriorityQueue<pair> minheap = new PriorityQueue<>(Math.max(n, m), new Comparator<pair>(){//第一个参数为队列的容量
+            public int compare(pair a, pair b){
+                return a.val - b.val;
+            }
+        });
+        boolean[][] flag = new boolean[n][m];
+        minheap.add(new pair(0, 0, matrix[0][0]));
+        for(int i = 0; i < k - 1; i ++){
+            pair cur = minheap.poll();
+            for(int j = 0; j < 2; j ++){
+                int next_x = cur.x + dx[j];
+                int next_y = cur.y + dy[j];
+                pair next_Pair = new pair(next_x, next_y, 0);//set为0的原因是因为next_x和next_y可能超出matrix的index，所以不能直接设置为matrix[next_x][next_y]，需要来一步判断。
+                if(next_x < n && next_y < m && !flag[next_x][next_y]){
+                    flag[next_x][next_y] = true;
+                    next_Pair.val = matrix[next_x][next_y];
+                    minheap.add(next_Pair);
+                }
+            }
+        }
+        return minheap.peek().val;
+        
+    }
+}
+class pair{
+    int x, y ,val;
+    pair(int x, int y, int val){
+        this.x = x;
+        this.y = y;
+        this.val = val;
+    }
+}
+
+543. Kth Largest in N Arrays
+/*
+1. 将每一行从小到大排序
+2. 将每一行最大（最后）的元素加入一个最大堆
+3. 取出堆顶元素，若此时取出元素数量不足k个，则将取出元素的左边元素（如果存在）加入堆
+4. 重复3直到取出k个元素为止*/
+//时间复杂度N*Len*Log(len)+K*logN (len是平均每个数组的长度)
+public class Solution {
+    /**
+     * @param arrays a list of array
+     * @param k an integer
+     * @return an integer, K-th largest element in N arrays
+     */
+    class Node{
+        int value;
+        int row;
+        int column;
+        public Node(int row, int column, int value){
+            this.value = value;
+            this.row = row;
+            this.column = column;
+        }
+    }
+
+    public int KthInArrays(int[][] arrays, int k) {
+        // Write your code here
+        if(arrays == null || arrays.length == 0 || k <= 0){
+            return -1;
+        }
+
+        for(int i = 0; i < arrays.length; i++){
+            Arrays.sort(arrays[i]);
+        }
+
+        Queue<Node> queue = new PriorityQueue<Node>(arrays.length, new Comparator<Node>(){
+            public int compare(Node a, Node b){
+                return b.value - a.value;
+            }
+        });
+
+        for(int i = 0; i < arrays.length; i++){
+            if(arrays[i].length > 0){
+                queue.offer(new Node(i, arrays[i].length - 1, arrays[i][arrays[i].length - 1]));
+            }
+        }
+
+        for(int i = 0; i < k; i++){
+            Node temp = queue.poll();
+            if(i == k - 1){
+                return temp.value;
+            }
+            if(temp.column > 0){
+                queue.offer(new Node(temp.row, temp.column - 1, arrays[temp.row][temp.column - 1]));
+            }
+        }
+        return -1;
+    }
+}
+
+
