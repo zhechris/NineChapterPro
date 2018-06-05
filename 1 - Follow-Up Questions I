@@ -370,4 +370,77 @@ public class Solution {
     }
 }
 
+Kth Smallest Sum In Two Sorted Arrays
+/*此题乍看似乎没有很好的思路，其实稍加转化就变成了熟悉的问题：Kth Smallest Number in Sorted Matrix.
+两个array中间分别取一个数相加得到一个sum，其实可以想象一个Matrix，里面元素的坐标就是分别在两个Array中的下标index，而元素的值则是sum的值。那么很显然，因为两个array都是排序过的，那么对于这个想象中的matrix中的每一行每一列来说，都是排好序的。
+比如对于[1, 7, 11] and [2, 4, 6].
+M   1,  7, 11
+2,  3,  9, 13
+4,  5, 11, 15
+6,  7, 13, 17
+接下来就可以利用PriorityQueue构造Min Heap来解决了。*/
+class Node {
+    public int x, y, sum;
+    public Node(int x, int y, int sum) {
+        this.x = x;
+        this.y = y;
+        this.sum = sum;
+    }
+}
+
+class NodeComparator implements Comparator<Node> {
+    @Override
+    public int compare(Node a, Node b) {
+        return a.sum - b.sum;
+    }
+}
+
+public class Solution {
+    int[] dx = new int[] {0, 1};
+    int[] dy = new int[] {1, 0};
+
+    // Check if a coordinate is valid and should be marked as visited
+    public boolean isValid(int x, int y, int[] A, int[] B, boolean[][] visited) {
+        if (x < A.length && y < B.length && !visited[x][y]) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param A an integer arrays sorted in ascending order
+     * @param B an integer arrays sorted in ascending order
+     * @param k an integer
+     * @return an integer
+     */
+    public int kthSmallestSum(int[] A, int[] B, int k) {
+        // Validation of input
+        if (A == null || B == null || A.length == 0 || B.length == 0) {
+            return -1;
+        }
+        if (A.length * B.length < k) {
+            return -1;
+        }
+
+        PriorityQueue<Node> heap = new PriorityQueue<Node>(k, new NodeComparator());
+        heap.offer(new Node(0, 0, A[0] + B[0]));
+
+        boolean[][] visited = new boolean[A.length][B.length];
+
+        for (int i = 0; i < k - 1; i++) {
+            Node smallest = heap.poll();
+            for (int j = 0; j < 2; j++) {
+                int nextX = smallest.x + dx[j];
+                int nextY = smallest.y + dy[j];
+
+                if (isValid(nextX, nextY, A, B, visited)) {
+                    visited[nextX][nextY] = true;
+                    int nextSum = A[nextX] + B[nextY];
+                    heap.offer(new Node(nextX, nextY, nextSum));
+                }
+            }
+        }
+        return heap.peek().sum;
+    }
+}
 
