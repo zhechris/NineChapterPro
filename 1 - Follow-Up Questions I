@@ -202,6 +202,7 @@ public class Solution {
 }
 
 363. Trapping Rain Water
+/*从左右开始，选择相对小的向内部灌水*/
 public class Solution {
     /**
      * @param heights: a list of integers
