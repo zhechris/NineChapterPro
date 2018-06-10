@@ -210,25 +210,27 @@ public class Solution {
      */
     public int trapRainWater(int[] heights) {
         // write your code here
-        if(heights == null || heights.length < 3){
-            return 0;
-        }
+        int left = 0, right = heights.length - 1; 
         int res = 0;
-        int l = 0;
-        int r = heights.length - 1;
-        int leftheight = heights[l];
-        int rightheight = heights[r];
-        //Two Pointers, l and r. 移动指向高度小的, //因为小的这边围住的水肯定能被大的那一边围住.
-        //然后更新高度，用新高度减掉height包含的高度就是这一位置能围住的水量.
-        while(l < r){
-            if(leftheight < rightheight){
-                l++;
-                leftheight = Math.max(leftheight, heights[l]);
-                res += leftheight - heights[l];
-            } else{
-                r--;
-                rightheight = Math.max(rightheight, heights[r]);
-                res += rightheight - heights[r];
+        if(left >= right)
+            return res;
+        int leftheight = heights[left];
+        int rightheight = heights[right];
+        while(left < right) {
+            if(leftheight < rightheight) {
+                left ++;//一根一根的灌
+                if(leftheight > heights[left]) {
+                    res += (leftheight - heights[left]);//当前的小于之前的，向内部灌水
+                } else {
+                    leftheight = heights[left];//当前的大于之前的，更新之前的高度
+                }
+            } else {
+                right --;
+                if(rightheight > heights[right]) {
+                    res += (rightheight - heights[right]);
+                } else {
+                    rightheight = heights[right];
+                }
             }
         }
         return res;
