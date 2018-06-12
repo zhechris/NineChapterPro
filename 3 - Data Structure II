@@ -66,3 +66,31 @@ public class Solution {
         return water;
     }
 }
+
+130. Heapify
+public class Solution {
+    /*
+     * @param A: Given an integer array
+     * @return: nothing
+     */
+    public void siftdown(int[] A, int father){
+        while (father * 2 + 1 < A.length) {
+            int son = father * 2 + 1;
+            if (father * 2 + 2 < A.length && A[son] > A[father * 2 + 2])
+                son = father * 2 + 2;
+            if (A[son] >= A[father])
+                break;
+            
+            int temp = A[son];
+            A[son] = A[father];
+            A[father] = temp;
+            father = son;//该分支下面的分支都调整一下
+        }
+    }
+    public void heapify(int[] A) {
+        // write your code here
+        for(int i = (A.length - 1) / 2; i >=0; i--){
+            siftdown(A, i);
+        }
+    }
+}
