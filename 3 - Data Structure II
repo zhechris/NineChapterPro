@@ -118,7 +118,7 @@ public class Solution {
         
         for(int i = 0; i < nums.length; i++){
             maxheap.offer(nums[i]);
-            if(maxheap.size() > minheap.size()){
+            if(maxheap.size() >= minheap.size()){//等于放在这里是因为不管奇数还是偶数个，都可以从前面的堆里取到中位数
                 minheap.offer(maxheap.poll());
             } 
             if(maxheap.size() < minheap.size()){
@@ -129,3 +129,51 @@ public class Solution {
         return res;
     }
 }
+
+360. Sliding Window Median
+public class Solution {
+  public ArrayList<Integer> medianSlidingWindow(int[] nums, int k) {
+    ArrayList<Integer> result = new ArrayList<Integer>();
+    int length = nums.length;
+    
+    if (nums == null || length == 0 || length < k) {
+      return result;
+    }
+    
+    PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>(length);
+    PriorityQueue<Integer> maxHeap = new PriorityQueue<Integer>(length, Collections.reverseOrder());
+    
+    int j = 0;
+    int median = nums[0];
+    //执行窗口的挪动，并且依次判断出去的元素是否应该出去
+    for (int i = 0; i < nums.length; i++) {
+      if (i >= k) {
+        if (nums[j] > median) {
+          minHeap.remove(nums[j]);//自带的remove时间复杂度是O(N),如果用hashheap可以到O(logN),因为不用for遍历查找了
+        } else {
+          maxHeap.remove(nums[j]);
+        }
+        j++;
+      }
+      
+      maxHeap.offer(nums[i]);
+      
+      if (maxHeap.size() >= minHeap.size()) {
+        minHeap.offer(maxHeap.poll());
+      }
+      
+      if (minHeap.size() > maxHeap.size()) {
+        maxHeap.offer(minHeap.poll());
+      }
+
+      
+      if (i >= k - 1) {
+        median = maxHeap.peek();
+        result.add(median);
+      }
+    }
+    
+    return result;
+  }
+}
+
