@@ -94,3 +94,38 @@ public class Solution {
         }
     }
 }
+
+81. Find Median from Data Stream
+/*分为两个堆，一个最大堆，一个最小堆，来一个数判断放在那个堆里面，从最大堆里面peek*/
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: the median of numbers
+     */
+    public int[] medianII(int[] nums) {
+        // write your code here
+        int[] res = new int[nums.length];
+        if(nums == null || nums.length == 0){
+            return res;
+        }
+        
+        PriorityQueue<Integer> minheap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxheap = new PriorityQueue<>(new Comparator<Integer>(){
+            public int compare(Integer a, Integer b){
+                return b - a;
+            }
+        });
+        
+        for(int i = 0; i < nums.length; i++){
+            maxheap.offer(nums[i]);
+            if(maxheap.size() > minheap.size()){
+                minheap.offer(maxheap.poll());
+            } 
+            if(maxheap.size() < minheap.size()){
+                maxheap.offer(minheap.poll());
+            }
+            res[i] = maxheap.peek();
+        }
+        return res;
+    }
+}
