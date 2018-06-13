@@ -177,3 +177,40 @@ public class Solution {
   }
 }
 
+362. Sliding Window Maximum
+public class Solution {
+    /*
+     * @param nums: A list of integers
+     * @param k: An integer
+     * @return: The maximum number inside the window at each moving
+     */
+    public void inQueue(Deque<Integer> deque, int num){
+        while(!deque.isEmpty() && deque.peekLast() < num){
+            deque.pollLast();//维持一个倒序排列的数组
+        }
+        deque.offer(num);
+    }
+    public void outQueue(Deque<Integer> deque, int num){
+        if(deque.peekFirst() == num){//挪动的数组头已经到达最大的数了，不得不删，因为下次迭代就出了窗口了。
+            deque.pollFirst();
+        }
+    }
+    public List<Integer> maxSlidingWindow(int[] nums, int k) {
+        // write your code here
+        List<Integer> res = new ArrayList<>();
+        Deque<Integer> deque = new ArrayDeque<>();
+        if(nums.length == 0){
+            return res;
+        }
+        for(int i = 0; i < k - 1; i++){
+            inQueue(deque, nums[i]);//首先添加进去k个数组
+        }
+        
+        for(int i = k - 1; i < nums.length; i++) {
+            inQueue(deque, nums[i]);
+            res.add(deque.peekFirst());
+            outQueue(deque, nums[i - k + 1]);//窗口开始挪动，一进一出
+        }
+        return res;
+    }
+}
