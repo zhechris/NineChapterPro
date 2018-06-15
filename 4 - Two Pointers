@@ -122,3 +122,73 @@ public class Solution {
         return res;
     }
 }
+
+89. k Sum
+public class Solution {
+    /**
+     * @param A: An integer array
+     * @param k: A positive integer (k <= length(A))
+     * @param target: An integer
+     * @return: An integer
+     */
+    public int kSum(int[] nums, int k, int target) {
+        // write your code here
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        Arrays.sort(nums);
+        result = recursionRoutin(nums,0,k,target);
+        return result.size();
+    }
+    public List<List<Integer>> recursionRoutin(int[] nums,int begin,int k,int target){
+        HashSet<List<Integer>> elementSet = new HashSet<List<Integer>>();
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<List<Integer>> subResult = new ArrayList<List<Integer>>();
+        if(k == 1){
+            for(int i = 0; i < nums.length; i++){
+                if(nums[i] == target){
+                    List<Integer> taplet = new ArrayList<Integer>();
+                    taplet.add(nums[i]);
+                    result.add(taplet);
+                }
+            }
+        }
+        //Recursion Base
+        else if(k == 2){
+            int left = begin;
+            int right = nums.length - 1;
+            while(left < right){
+                int sum = nums[left] + nums[right];
+                if(sum == target){
+                    List<Integer> taplet = new ArrayList<Integer>();
+                    taplet.add(nums[left]);
+                    taplet.add(nums[right]);
+                    //Avoid reduplication 
+                    if(!elementSet.contains(taplet)){
+                        result.add(taplet);
+                        elementSet.add(taplet);
+                    }
+                    left ++;
+                    right --;
+                }else if(sum < target){
+                    left ++;
+                }else{
+                    right --;
+                }
+            }
+            return result;
+        }else{
+
+            for(int i = begin;i < nums.length - k - 1;i ++){
+                subResult = recursionRoutin(nums,i + 1,k - 1,target - nums[i]);
+                //System.out.println(k + " " + subResult);
+                if(!subResult.isEmpty()){
+                    for(int j = 0;j < subResult.size();j ++){
+                        subResult.get(j).add(nums[i]);
+                        result.add(subResult.get(j));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
+
