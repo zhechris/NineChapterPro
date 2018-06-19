@@ -866,3 +866,111 @@ public class Solution {
         return dummy.next;
     }
 }
+
+二. 快慢类
+Middle of Linked List
+class Solution {
+
+    public ListNode getMidhalf(ListNode head){
+        ListNode slow = head, fast = head.next;
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        return slow;
+    }
+}
+
+102. Linked List Cycle
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param head: The first node of linked list.
+     * @return: True if it has a cycle, or false
+     */
+    public boolean hasCycle(ListNode head) {
+        // write your code here
+        if(head == null || head.next == null){
+            return false;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(fast == slow){
+                return true;
+            }
+            
+        }
+        return false;
+    }
+}
+
+103. Linked List Cycle II
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */
+/*证明:
+1. 假设慢指针走t步, 快指针走快一倍, 也就是2t.
+2. 我们假设cycle的长度是Y, 而进入cycle之前的长度为X.
+3. 假设慢指针走了m圈cycle, 而快指针走了n圈cycle之后, 两个pointer相遇.
+4. 最终在Y cycle里面的K点相遇, 也就是两个指针都在这最后一圈里面走了K 步.
+=> 
+那么:
+t = X + mY + K
+2t = X + nY + K
+整合公式:
+X + K = (n - 2m)Y
+这里的m和n不过是整数的跑圈数, 也就是说X和K加在一起, 总归是结束cycle. X 和 K 互补
+=> 结论: 当slow/fast 指针在K点相遇后, 再走X步, 就到了cycle的起点, 也就是题目要求的起点.*/
+
+public class Solution {
+    /*
+     * @param head: The first node of linked list.
+     * @return: The node where the cycle begins. if there is no cycle, return null
+     */
+    public ListNode detectCycle(ListNode head) {
+        // write your code here
+        if(head == null || head.next == null){
+            return null;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(fast == slow){
+                slow = head;
+                while (fast != slow) {
+                    fast = fast.next;
+                    slow = slow.next;
+                }
+                return slow;
+            }
+        }
+        
+        return null;
+    }
+}
