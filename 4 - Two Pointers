@@ -777,4 +777,92 @@ public class Solution {
     }
 }
 
+386. Longest Substring with At Most K Distinct Characters
+public class Solution {
+    /**
+     * @param s: A string
+     * @param k: An integer
+     * @return: An integer
+     */
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        // write your code here
+        if(s == null || s.length() == 0 || k <= 0){
+            return 0;
+        }
+        
+        Map<Character, Integer> map = new HashMap<>();
+        int res = Integer.MIN_VALUE;
+        
+        int i = 0;
+        int j = 0;
+        for(; i < s.length(); i++){
+            while(j < s.length()){
+                char c1 = s.charAt(j);
+                if(!map.containsKey(c1)){
+                    if(map.size() == k){
+                        break;
+                    }
+                    map.put(c1, 1);
+                } else{
+                    map.put(c1, map.get(c1) + 1);
+                }
+                j++;
+            }
+            res = Math.max(res, j - i);
+            char ch_i = s.charAt(i);
+            if (map.containsKey(ch_i)) {
+                if (map.get(ch_i) - 1 == 0) {
+                    map.remove(ch_i);
+                } else {
+                    map.put(ch_i, map.get(ch_i) - 1);
+                }
+            }
+        }
+        return res;
+    }
+}
 
+174. Remove Nth Node From End of List
+/**
+ * Definition for ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @param n: An integer
+     * @return: The head of linked list.
+     */
+     
+    /*要有一个头指针，dummy node, 以防删除的点是头
+设置快慢指针，快指针先行n步，慢指针之后出发，什么时候快指针指向最后一个点的时候，
+慢指针指向的点就是待删除点的前一个点。让slow.next = slow.next.next即可（if slow.next != null）
+*/
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+   
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+        
+        while(fast.next != null){
+            if(n <= 0){
+                slow = slow.next;
+            }
+            fast = fast.next;
+            n--;
+        }
+        if(slow.next != null)
+        slow.next = slow.next.next;
+        
+        return dummy.next;
+    }
+}
