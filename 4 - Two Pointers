@@ -974,3 +974,79 @@ public class Solution {
         return null;
     }
 }
+
+两个数组两个指针（并行型）
+387. The Smallest Difference
+public class Solution {
+    /**
+     * @param A: An integer array
+     * @param B: An integer array
+     * @return: Their smallest difference.
+     */
+    public int smallestDifference(int[] A, int[] B) {
+        // write your code here
+        if (A == null || A.length == 0 || B == null || B.length == 0) {
+            return 0;
+        }
+        
+        Arrays.sort(A);
+        Arrays.sort(B);
+        
+        int ai = 0, bi = 0;
+        int min = Integer.MAX_VALUE;
+        while (ai < A.length && bi < B.length) {
+            min = Math.min(min, Math.abs(A[ai] - B[bi]));
+            if (A[ai] < B[bi]) {
+                ai++;
+            } else {
+                bi++;
+            }
+        }
+        return min;
+    }
+}
+
+165. Merge Two Sorted Lists
+/**
+ * Definition for ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param l1: ListNode l1 is the head of the linked list
+     * @param l2: ListNode l2 is the head of the linked list
+     * @return: ListNode head of linked list
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // write your code here
+        ListNode dummy = new ListNode(0);
+        ListNode lastNode = dummy;
+        
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                lastNode.next = l1;
+                l1 = l1.next;
+            } else {
+                lastNode.next = l2;
+                l2 = l2.next;
+            }
+            lastNode = lastNode.next;
+        }
+        
+        if (l1 != null) {
+            lastNode.next = l1;
+        } else {
+            lastNode.next = l2;
+        }
+        
+        return dummy.next;
+    }
+}
