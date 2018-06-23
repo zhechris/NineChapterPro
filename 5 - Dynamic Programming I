@@ -1,0 +1,130 @@
+1.滚动数组优化
+解题思路，先用普通方法找出来状态方程， 之后%k， k为当前状态与前k个状态有关
+可以将空间从O(N)优化成O(1)
+392. House Robber
+public class Solution {
+    /**
+     * @param A: An array of non-negative integers
+     * @return: The maximum amount of money you can rob tonight
+     */
+    public long houseRobber(int[] A) {
+        // write your code here
+        int n = A.length;
+        if(n == 0)
+            return 0;
+        long []res = new long[2];
+        
+        
+        res[0] = 0;
+        res[1] = A[0];
+        for(int i = 2; i <= n; i++) {
+            res[i % 2] = Math.max(res[(i-1) % 2], res[(i-2) % 2] + A[i-1]);
+        }
+        return res[n % 2];
+    }
+}
+
+534. House Robber II
+public class Solution {
+    /**
+     * @param nums: An array of non-negative integers.
+     * @return: The maximum amount of money you can rob tonight
+     */
+    public int houseRobber2(int[] nums) {
+        // write your code here
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        //将环断开，不取最后一个，取第一个
+        int[] dp1 = new int[2];
+        dp1[0] = 0;
+        dp1[1] = nums[0];
+        for(int i = 2; i <= nums.length; i++){
+            if(i == nums.length){
+                dp1[nums.length % 2] = dp1[(nums.length - 1) % 2];
+                break;
+            }
+            dp1[i % 2] = Math.max(dp1[(i - 1) % 2], dp1[(i - 2) % 2] + nums[i - 1]);
+        }
+        
+        //取最后一个，不取第一个
+        int[] dp2 = new int[2];
+        dp2[0] = 0;
+        dp2[1] = 0;
+        for(int i = 2; i <= nums.length; i++){
+            dp2[i % 2] = Math.max(dp2[(i - 1) % 2], dp2[(i - 2) % 2] + nums[i - 1]);
+        }
+        
+        return Math.max(dp2[nums.length % 2], dp1[nums.length % 2]);
+    }
+}
+
+436. Maximal Square
+public class Solution {
+    /**
+     * @param matrix: a matrix of 0 and 1
+     * @return: an integer
+     */
+    public int maxSquare(int[][] matrix) {
+        // write your code here
+        int res = 0;
+        if(matrix.length == 0 || matrix[0].length == 0){
+            return res;
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] dp = new int[m][n];
+        
+        for(int i = 0; i < m; i++){
+            dp[i][0] = matrix[i][0];
+            res = Math.max(res, dp[i][0]);
+            for(int j = 1; j < n; j++){
+                if(i > 0){
+                    if(matrix[i][j] != 0){
+                        dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1])  ) + 1;
+                    } else{
+                        dp[i][j] = 0;
+                    }
+                } else{
+                    dp[i][j] = matrix[i][j];
+                }
+                res = Math.max(res, dp[i][j]);
+            }
+        }
+        return res*res;
+    }
+}
+//滚动数组优化，但是只能优化行或者列，不然切换到下一行或者列的时候就会因为没保存而失效
+public class Solution {
+    /**
+     * @param matrix: a matrix of 0 and 1
+     * @return: an integer
+     */
+    public int maxSquare(int[][] matrix) {
+        // write your code here
+        int res = 0;
+        if(matrix.length == 0 || matrix[0].length == 0){
+            return res;
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] dp = new int[2][n];
+        
+        for(int i = 0; i < m; i++){
+            dp[i % 2][0] = matrix[i][0];
+            res = Math.max(res, dp[i % 2][0]);
+            for(int j = 1; j < n; j++){
+                dp[i % 2][j] = matrix[i % 2][j];
+                if(i > 0){
+                    if(matrix[i][j] != 0){
+                        dp[i % 2][j] = Math.min(dp[(i - 1) % 2][j - 1], Math.min(dp[(i - 1) % 2][j], dp[i % 2][j - 1]) ) + 1;
+                    } else{
+                        dp[i % 2][j] = 0;
+                    }
+                } 
+                res = Math.max(res, dp[i % 2][j]);
+            }
+        }
+        return res*res;
+    }
+}
