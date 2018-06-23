@@ -128,3 +128,7 @@ public class Solution {
         return res*res;
     }
 }
+小技巧
+网格类的题目
+正方形用右下角作为定位角
+长方形可以用左上角和右下角作为定位角
