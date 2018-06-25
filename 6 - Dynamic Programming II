@@ -3,6 +3,10 @@
 2.从大到小转移
 3.先画出搜索树，再找到转移方程
 4.填满对角线右上部分即可
+一般步骤
+1.来一个sum求和，可能会用到
+2.dp的起始点一般为对角线，初始化对角线
+3.从下向上，从左到右开始填充，最后结果在右上角
 Stone Game
 class Solution {
     /**
@@ -26,16 +30,16 @@ class Solution {
                 }
             }
         }
-
+        //初始化对角线
         for (int i = 0; i < n; i++) {
             dp[i][i] = 0;
         }
 
-        for (int delta = 1; delta < n; delta++) {
+        for (int delta = 1; delta < n; delta++) {//delta作为区间的长度
             for (int start = 0; start < n - delta; start++) {
                 int end = start + delta;
                 dp[start][end] = Integer.MAX_VALUE;
-                for (int k = start; k < end; k++) {
+                for (int k = start; k < end; k++) {//k最为切分点
                     dp[start][end] = Math.min(dp[start][end], dp[start][k] + dp[k + 1][end] + sum[start][end]);
                 }
             }
