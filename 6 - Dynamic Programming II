@@ -1,1 +1,45 @@
+区间类DP
+1.区间更新
+2.从大到小转移
+3.先画出搜索树，再找到转移方程
+4.填满对角线右上部分即可
+Stone Game
+class Solution {
+    /**
+     * @param A an integer array
+     * @return an integer
+     */
+    public int stoneGame(int[] A) {
+        if (A == null || A.length == 0) {
+            return 0;
+        }
+        int n = A.length;
+        int[][] sum = new int[n][n];
+        int[][] dp = new int[n][n];
 
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                if (i == j) {
+                    sum[i][j] = A[j];
+                } else {
+                    sum[i][j] = sum[i][j - 1] + A[j];
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = 0;
+        }
+
+        for (int delta = 1; delta < n; delta++) {
+            for (int start = 0; start < n - delta; start++) {
+                int end = start + delta;
+                dp[start][end] = Integer.MAX_VALUE;
+                for (int k = start; k < end; k++) {
+                    dp[start][end] = Math.min(dp[start][end], dp[start][k] + dp[k + 1][end] + sum[start][end]);
+                }
+            }
+        }
+        return dp[0][n - 1];
+    }
+}
