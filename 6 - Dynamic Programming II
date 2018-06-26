@@ -168,3 +168,23 @@ public class Solution {
         return 0;
     }
 }
+
+BackPack IV
+class Solution {
+    public int backPackIV(int[] nums, int target) {
+        int n = nums.length;
+        int m = target;
+        int[][] dp = new int[n + 1][m + 1];//从前几个数字中取出总数满足m的值
+        dp[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                int k = 0;
+                while (k * nums[i - 1] <= j) {
+                    dp[i][j] += dp[i - 1][j - k * nums[i - 1]];
+                    k++;
+                }
+            }
+        }
+        return dp[n][m];
+    }
+}
