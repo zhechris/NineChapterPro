@@ -243,3 +243,47 @@ public class Solution {
         return f[n][k][target];
     }
 }
+
+91. Minimum Adjustment Cost
+public class Solution {
+    /**
+     * @param A: An integer array.
+     * @param target: An integer.
+     */
+    public int MinAdjustmentCost(ArrayList<Integer> A, int target) {
+        // write your code here
+        if(A == null || A.size() == 0){
+            return 0;
+        }
+
+        int n = A.size();
+        //mac[i][j]表示前i个元素满足要求且第i个元素为j的最小cost。
+        //初始化：mac[1][j] = Math.abs(A[0] - j)，根据题意j在1到100之间
+        int[][] mac = new int[n + 1][100 + 1];
+
+        for(int i = 1; i <= 100; i++){
+            mac[1][i] = Math.abs(A.get(0) - i);
+        }
+
+        for(int i = 2; i <= n; i++){
+            for(int j = 1; j <= 100; j++){
+
+                mac[i][j] = Integer.MAX_VALUE;
+
+                for(int k = 1; k <= 100; k++){
+                    /*对于所有在范围内的k，当第i位元素取j时，取符合要求的第i－1位元素为k的情况的最小值，其中abs(j-k)的值要小于target才能符合要求。*/
+                    if(Math.abs(k - j) <= target){
+                        mac[i][j] = Math.min(mac[i][j], mac[i - 1][k] + Math.abs(A.get(i - 1) - j));
+                    }
+                }//k
+            }//j
+        }//i
+
+        int min = Integer.MAX_VALUE;
+        for(int i = 1; i <= 100; i++){
+            min = Math.min(min, mac[n][i]);
+        }
+
+        return min;
+    }
+}
