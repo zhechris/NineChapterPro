@@ -213,3 +213,33 @@ public class Solution {
     	return[n][m];
     }
 }
+
+89. k Sum
+public class Solution {
+    /**
+     * @param A: An integer array
+     * @param k: A positive integer (k <= length(A))
+     * @param target: An integer
+     * @return: An integer
+     */
+    public int kSum(int[] A, int k, int target) {
+        // write your code here
+        int n = A.length;
+        int[][][] f = new int[n + 1][k + 1][target + 1];//前i个数中取j个的值能否为t
+        for (int i = 0; i < n + 1; i++) {
+            f[i][0][0] = 1;
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= k && j <= i; j++) {
+                for (int t = 1; t <= target; t++) {
+                    f[i][j][t] = 0;
+                    if (t >= A[i - 1]) {
+                        f[i][j][t] = f[i - 1][j - 1][t - A[i - 1]];
+                    }
+                    f[i][j][t] += f[i - 1][j][t];
+                } // for t
+            } // for j
+        } // for i
+        return f[n][k][target];
+    }
+}
