@@ -253,7 +253,7 @@ public class Solution {
     }
 }
 
-Kth Smallest Sum In Two Sorted Arrays
+Kth Smallest In Two Sorted Arrays
 //一个最基本的方法，遍历O(m + n)
 class Solution{
 	public int Kth(int[] a, int[] b, int k ){
