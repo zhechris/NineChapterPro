@@ -315,3 +315,64 @@ public class Solution {
         return res;
     }
 }
+
+405. Submatrix Sum
+/*这道题和求数组中哪些元素和为0的解决方法一样，只是数组中求的是前i个元素和前j个元素和相等，则i－j元素和为0，而这里只是变成2维的而已。
+sum[i][j]表示matrix[0][0]到matrix[i-1][j-1]所有元素的和。
+建立sum矩阵，为n＋1行，m＋1列。将第0行和第0列都初始化为0。
+遍历matrix，根据公式 sum[i][j] = matrix[i - 1][j - 1] + sum[i][j - 1] + sum[i - 1][j] -sum[i - 1][j - 1] 计算所有sum。
+然后取两个row：l1, l2。用一个线k从左到右扫过l1和l2，每次都用diff=sum[l1][k]-sum[l2][k]来表示l1-l2和0-k这个矩形元素的sum。
+如果在同一个l1和l2中，有两条线（k1，k2）的diff相等，则表示l1-l2和k1-k2这个矩形中的元素和为0。*/
+public class Solution {
+    /*
+     * @param matrix: an integer matrix
+     * @return: the coordinate of the left-up and right-down number
+     */
+    public int[][] submatrixSum(int[][] matrix) {
+        // Write your code here
+        int[][] res = new int[2][2];
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0){
+            return res;
+        }
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] sum = new int[m + 1][n + 1];
+
+        for(int i = 0; i < m; i++){
+            sum[i][0] = 0;
+        }
+
+        for(int j = 0; j < n; j++){
+            sum[0][j] = 0;
+        }
+
+        for(int i = 1; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                sum[i][j] = matrix[i - 1][j - 1] + sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1];
+            }
+        }
+
+        for(int l = 0; l < m; l++){
+            for(int h = l + 1; h <= m; h++){
+                HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+                for(int k = 0; k <= n; k++){
+                    int diff = sum[h][k] - sum[l][k];
+                    if(map.containsKey(diff)){
+                    //正常情况下应该和之前的subarray//sum一致，第一个为下一个开始，最后一个要包含
+                    //但是现在矩阵加了一维，所以要减1
+                        res[0][0] = l;
+                        res[0][1] = map.get(diff);
+                        res[1][0] = h - 1;
+                        res[1][1] = k - 1;
+                        return res;
+                    }else{
+                        map.put(diff, k);
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
