@@ -285,3 +285,33 @@ class Solution{
 	}
 }
 
+138. Subarray Sum
+//涉及到subarray之类的题目，一定要想到用map来扫描，下次探测发现相同的即可，还有一类题目，找相同的，可以用map存取相反的数目。
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number and the index of the last number
+     */
+    public List<Integer> subarraySum(int[] nums) {
+        // write your code here
+        List<Integer> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int sum = 0;
+        map.put(0, -1);//First add sum = 0 into map, if sum = 0 show up again, indicates              
+		      //that already find it.
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (map.containsKey(sum)) {
+                res.add(map.get(sum) + 1);//casue the subarray begin at next int
+                res.add(i);
+            } else {
+                map.put(sum, i);
+            }
+        }
+        return res;
+    }
+}
