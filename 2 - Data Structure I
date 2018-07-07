@@ -9,6 +9,64 @@ Find the Connected Component in the directed Graph
         label = x; neighbors = new ArrayList<UndirectedGraphNode>();
     }
 }*/
+/**
+ * Definition for Undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+
+//Algorithm 1. bfs 
+public class Solution {
+    public List<List<Integer>> connectedSet(ArrayList<UndirectedGraphNode> nodes) {
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
+        if(nodes == null || nodes.size() == 0)
+        {
+            return results;
+        }
+        Set<UndirectedGraphNode> visited = new HashSet<UndirectedGraphNode>();
+        //bfs on each node to get all the connected components
+        for(UndirectedGraphNode node : nodes)   
+        {
+            if(!visited.contains(node))
+            {
+                bfs(node, visited, results);
+            }
+        }
+        return results;
+    }
+    private void bfs(UndirectedGraphNode node, 
+                    Set<UndirectedGraphNode> visited,
+                    List<List<Integer>> results)
+    {
+        ArrayList<Integer> comp = new ArrayList<Integer>();
+        Queue<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
+        queue.offer(node);
+        visited.add(node);
+        comp.add(node.label);
+        
+        while(!queue.isEmpty())
+        {
+            UndirectedGraphNode curr = queue.poll();
+            for(UndirectedGraphNode neighbor : curr.neighbors)
+            {
+                if(!visited.contains(neighbor))
+                {
+                    queue.offer(neighbor);
+                    visited.add(neighbor);
+                    comp.add(neighbor.label);
+                }
+            }
+        }
+        Collections.sort(comp);
+        results.add(comp);
+    }
+}
+
+
+//Algorithm 2. Union Find
 class solution {
 
     public List<List<Integer>> connectedSet(ArrayList<UndirectedGraphNode> nodes) {
