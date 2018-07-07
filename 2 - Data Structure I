@@ -1,4 +1,7 @@
 Find the Connected Component in the Undirected Graph
+Find the Connected Component in the directed Graph
+/*这两道题是同样的方法，但是区别是，第二题不能用BFS，
+第一题可以根据一个点reach到所有的连着的点，第二题因为有方向，不能reach到反方向的*/
 /*class UndirectedGraphNode {
     int label;
     ArrayList<UndirectedGraphNode> neighbors;
