@@ -1,0 +1,53 @@
+Find the Connected Component in the Undirected Graph
+/*class UndirectedGraphNode {
+    int label;
+    ArrayList<UndirectedGraphNode> neighbors;
+    UndirectedGraphNode(int x) {
+        label = x; neighbors = new ArrayList<UndirectedGraphNode>();
+    }
+}*/
+class solution {
+
+    public List<List<Integer>> connectedSet(ArrayList<UndirectedGraphNode> nodes) {
+        HashMap<Integer, Integer> fathers = new HashMap<>();
+        //初始化，自己是自己的爸爸
+        for (UndirectedGraphNode node : nodes) {
+            fathers.put(node.label, node.label);
+        }
+
+        for (UndirectedGraphNode node : nodes) {
+            int fax = find(fathers, node.label);//找到当前点的node
+            for (UndirectedGraphNode neighbor : node.neighbors) {
+                int fay = find(fathers, neighbor.label);//找到link的点得father
+                if (fax != fay) {
+                    fathers.put(fay, fax);//如果两个点的father不同，就union这两个点
+                }
+            }
+        }
+
+        HashMap<Integer, ArrayList<Integer>> ans = new HashMap<>();
+
+        for (Map.Entry<Integer, Integer> entry : fathers.entrySet()) {
+            int fa = find(fathers, entry.getKey());
+            if (!ans.containsKey(fa)) {
+                ans.put(fa, new ArrayList<>());
+            }
+            ans.get(fa).add(entry.getKey());
+        }
+        
+        List<List<Integer>> res = new ArrayList<>();
+        for (List<Integer> v : ans.values()) {
+            Collections.sort(v);
+            res.add(v);
+        }
+        return res;
+        
+    }
+    public int find(HashMap<Integer, Integer> fathers, int label) {
+        int fa = fathers.get(label);
+        while (fa != fathers.get(fa)) {
+            fa = fathers.get(fa);
+        }
+        return fa;
+    }
+}
