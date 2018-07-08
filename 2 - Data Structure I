@@ -298,3 +298,58 @@ public class Solution {
         return ans;
     }
 }
+
+434. Number of Islands II
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+
+public class Solution {
+    
+    int[] dx = {0, 0, 1, -1};
+    int[] dy = {1, -1, 0, 0};
+    public List<Integer> numIslands2(int n, int m, Point[] operators) {
+        HashMap<Integer, Integer> fathers = new HashMap<>();
+        List<Integer> ans = new ArrayList<>();
+        int count = 0;
+        if (operators == null)
+            return ans;
+        for (Point p : operators) {
+            count++;
+            int idx = twod2oned(p.x, p.y, n, m);
+            fathers.put(idx, idx);
+            for (int i = 0; i < 4; i++) {
+                int nx = p.x + dx[i];
+                int ny = p.y + dy[i];
+                if (nx < 0 || nx >= n || ny < 0 || ny >= m)
+                    continue;
+                int neighbor = twod2oned(nx, ny, n, m);
+                if (fathers.containsKey(neighbor)) {
+                    int neighborGroup = find(fathers, neighbor);
+                    if (neighborGroup != idx) {
+                        fathers.put(neighborGroup, idx);
+                        count--;
+                    }
+                }
+            }
+            ans.add(count);
+        }
+        return ans;
+    }
+    private int find(HashMap<Integer, Integer> fathers, int x) {
+        int fa = fathers.get(x);
+        while (fa != fathers.get(fa)) {
+            fa = fathers.get(fa);
+        }
+        return fa;
+    }
+    private int twod2oned(int i, int j, int n, int m) {
+        return i * m + j;
+    }
+}
