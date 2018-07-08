@@ -409,3 +409,83 @@ public class Solution {
         return true;
     }
 }
+
+477. Surrounded Regions
+class UnionFind {
+    HashMap<Integer, Integer> fathers = new HashMap<>();
+    
+    UnionFind(int n) {
+        for (int i = 0; i < n; i++) {
+            fathers.put(i, i);
+        }
+    }
+    
+    public int CompressFind (int x) {
+        int parent = fathers.get(x);
+        while (parent != fathers.get(parent)) {
+            parent = fathers.get(parent);
+        }
+        
+        int fa = fathers.get(x);
+        while (fa != fathers.get(fa)) {
+            fathers.put(fa, parent);
+            fa = fathers.get(fa);
+        }
+        return parent;
+    }
+    
+    public void Union(int x, int y) {
+        int fa_x = CompressFind(x);
+        int fa_y = CompressFind(y);
+        
+        if (fa_x != fa_y) {
+            fathers.put(Math.min(fa_x, fa_y), Math.max(fa_x, fa_y));//always并到大的union里面, guarantee father == total
+        }
+    }
+    
+}
+public class Solution {
+    /*
+     * @param board: board a 2D board containing 'X' and 'O'
+     * @return: nothing
+     */
+    public void surroundedRegions(char[][] board) {
+        // write your code here
+        if (board == null || board.length == 0 || board[0].length == 0){
+            return;
+        }
+        int n = board.length;
+        int m = board[0].length;
+        int[] dx = new int[]{0, 0, 1, -1};
+        int[] dy = new int[]{1, -1, 0, 0};
+        
+        int total = n * m;//total elements
+        UnionFind uf = new UnionFind(total + 1);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++){
+                if (board[i][j] == 'X')
+                    continue;
+                
+                if (i == 0 || i == n - 1|| j == 0 || j == m - 1) {
+                    uf.Union(i * m + j, total);//here is a trick, union all edges 
+                } else {
+                    for (int k = 0; k < 4; k++) {
+                        int nx = i + dx[k];
+                        int ny = j + dy[k];
+                        if (board[nx][ny] == 'O'){
+                            uf.Union(i * m + j, nx * m + ny);
+                        }
+                    }
+                }
+            }
+        }
+        
+        for (int i = 1; i < n - 1; i++){
+            for (int j = 1; j < m - 1; j++){
+                if (board[i][j] == 'O' && uf.CompressFind(i * m + j) != total){
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+}
