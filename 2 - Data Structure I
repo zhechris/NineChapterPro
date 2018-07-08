@@ -1,3 +1,4 @@
+Union Find
 Find the Connected Component in the Undirected Graph
 Find the Connected Component in the directed Graph
 /*这两道题是同样的方法，但是区别是，第二题不能用BFS，
@@ -409,7 +410,7 @@ public class Solution {
         return true;
     }
 }
-
+//这道题和别的题目不同之处在于union，需要每次都并入到最大集合中去
 477. Surrounded Regions
 class UnionFind {
     HashMap<Integer, Integer> fathers = new HashMap<>();
