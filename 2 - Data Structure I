@@ -585,19 +585,15 @@ public class Trie {
 132. Word Search II
 class TrieNode {
     String word;
-    HashMap<Character, TrieNode> children;
-    public TrieNode() {
+    HashMap<Character, TrieNode> children = new HashMap<>();
+    public TrieNode(){
         word = null;
-        children = new HashMap<Character, TrieNode>();
     }
-};
-
-
-class TrieTree{
+}
+class Trie {
     TrieNode root;
-    
-    public TrieTree(TrieNode TrieNode) {
-        root = TrieNode;
+    public Trie(TrieNode node) {
+        root = node;
     }
     
     public void insert(String word) {
@@ -610,8 +606,9 @@ class TrieTree{
         }
         node.word = word;
     }
-};
-
+    
+    
+}
 public class Solution {
     /**
      * @param board: A list of lists of character
@@ -662,7 +659,7 @@ public class Solution {
     public List<String> wordSearchII(char[][] board, List<String> words) {
         List<String> results = new ArrayList<String>();
         
-        TrieTree tree = new TrieTree(new TrieNode());
+        Trie tree = new Trie(new TrieNode());
         for (String word : words){
             tree.insert(word);
         }
