@@ -673,3 +673,82 @@ public class Solution {
         return results;
     }
 }
+
+473. Add and Search Word - Data structure design
+class TrieNode {
+    boolean hasWord;
+    char c;
+    Map<Character, TrieNode> children = new HashMap<>();
+    
+    public TrieNode() {
+    }
+    
+    public TrieNode(char c) {
+        this.c = c;
+    }
+}
+
+public class WordDictionary {
+    TrieNode root = new TrieNode();
+    /*
+     * @param word: Adds a word into the data structure.
+     * @return: nothing
+     */
+    public void addWord(String word) {
+        // write your code here
+        TrieNode node = root;
+        char[] chars = word.toCharArray();
+        
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            if (!node.children.containsKey(c)) {
+                node.children.put(c, new TrieNode(c));
+            }
+            
+            node = node.children.get(c);
+            
+            if (i == chars.length - 1) {
+                node.hasWord = true;
+            }
+        }
+    }
+
+    /*
+     * @param word: A word could contain the dot character '.' to represent any one letter.
+     * @return: if the word is in the data structure.
+     */
+    public boolean search(String word) {
+        // write your code here
+        Queue<TrieNode> queue = new LinkedList<>();
+        queue.add(root);
+        
+        char[] chars = word.toCharArray();
+        
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            int size = queue.size();
+            
+            for (int j = 0; j < size; j++) {
+                TrieNode node = queue.poll();
+                
+                if (c == '.') {
+                    for (char key : node.children.keySet()) {
+                        queue.offer(node.children.get(key));
+                    }
+                }
+                
+                if (node.children.containsKey(c)) {
+                    queue.offer(node.children.get(c));
+                }
+            }
+        }
+        
+        while (!queue.isEmpty()) {
+            if (queue.poll().hasWord) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}
