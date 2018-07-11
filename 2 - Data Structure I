@@ -876,3 +876,33 @@ public class Solution {
         return sum;
     }
 }
+
+
+Comparator 和 Comparable 的区别
+Comparable
+
+Comparable 定义在类的内部:
+
+public class Persion implements Comparable {..比较Person的大小..},
+
+ 因为已经实现了比较器,那么我们的Person现在是一个可以比较大小的对象了,它的比较功能和String完全一样,可以随时随地的拿来
+比较大小,因为Person现在自身就是有大小之分的。Collections.sort(personList)可以得到正确的结果。
+
+Comparator
+
+Comparator 是定义在类的外部的, 此时我们的类的结构不需要有任何变化,如
+
+public class Person{ String name; int age },
+
+然后我们另外定义一个比较器:
+
+public PersonComparator implements Comparator() {..比较Person的大小..},
+
+在PersonComparator里面实现了怎么比较两个Person的大小. 所以,用这种方法,当我们要对一个 personList进行排序的时候, 
+我们除了了要传递personList过去, 还需要把PersonComparator传递过去,因为怎么比较Person的大小是在PersonComparator
+里面实现的, 如:
+
+Collections.sort( personList , new PersonComparator() ).
+
+实现Comparable接口要覆盖compareTo方法, 在compareTo方法里面实现比较
+实现Comparator需要覆盖 compare 方法
